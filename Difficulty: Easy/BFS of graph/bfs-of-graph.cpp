@@ -1,39 +1,35 @@
 class Solution {
   public:
-    // Function to return Breadth First Traversal of given graph.
-    void solve(int node,vector<int> &ans,vector<vector<int>> &adj,unordered_map<int,bool> &vis){
-        
+    void bfs(vector<vector<int>> &adj,vector<bool> &visited,vector<int> &v,int node){
+  
         queue<int> q;
+        visited[node] = true;
         q.push(node);
-        vis[node] = true;
         
-        while(!q.empty()){
+        while(q.size() >= 1){
+            int frontnode = q.front();
+            q.pop();
+            v.push_back(frontnode);
             
-            int frontNode = q.front();
-            for(int neigh: adj[frontNode]){
-                if(!vis[neigh]){
+            for(auto neigh : adj[frontnode]){
+                if(visited[neigh] == false){
+                    visited[neigh] = true;
                     q.push(neigh);
-                    vis[neigh] = true;
                 }
             }
-            ans.push_back(frontNode);
-            q.pop();
         }
     }
-
-
     vector<int> bfs(vector<vector<int>> &adj) {
-        // Code here
-        vector<int> ans;
-        int n = adj.size();
-        unordered_map<int,bool> vis;
-        
-        for(int i=0;i<n;i++){
-            
-            if(!vis[i]){
-                solve(i,ans,adj,vis);
+        // code here
+        int n= adj.size();
+        vector<bool> visited(n,false);
+        vector<int> v;
+       
+        for(int i =0;i<adj.size();i++){
+            if(visited[i] == false){
+                bfs(adj,visited,v,i);
             }
         }
-        return ans;
+        return v;
     }
 };
