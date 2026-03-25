@@ -1,23 +1,22 @@
 class Solution {
   public:
-    void bfs(vector<vector<int>> &adj,vector<bool> &visited,vector<int> &v,int node){
-  
+    void bfs(vector<vector<int>> &adj,vector<bool> &vis,vector<int> &v,int node){
+        vis[node] = true;
         queue<int> q;
-        visited[node] = true;
         q.push(node);
-        
-        while(q.size() >= 1){
+        v.push_back(node);
+        while(!q.empty()){
             int frontnode = q.front();
             q.pop();
-            v.push_back(frontnode);
-            
             for(auto neigh : adj[frontnode]){
-                if(visited[neigh] == false){
-                    visited[neigh] = true;
+                if(!vis[neigh]){
+                    vis[neigh] = true;
                     q.push(neigh);
+                    v.push_back(neigh);
                 }
             }
         }
+     
     }
     vector<int> bfs(vector<vector<int>> &adj) {
         // code here
