@@ -1,34 +1,33 @@
 class Solution {
   public:
-    void bfs(vector<vector<int>> &adj,vector<bool> &vis,vector<int> &v,int node){
+    void bfs(vector<vector<int>> &adj,vector<int> &ans,int node,vector<bool> &vis){
         vis[node] = true;
         queue<int> q;
+        ans.push_back(node);
         q.push(node);
-        v.push_back(node);
+        
         while(!q.empty()){
-            int frontnode = q.front();
+            int frontNode = q.front();
             q.pop();
-            for(auto neigh : adj[frontnode]){
+            for(auto neigh : adj[frontNode]){
                 if(!vis[neigh]){
                     vis[neigh] = true;
                     q.push(neigh);
-                    v.push_back(neigh);
+                    ans.push_back(neigh);
                 }
             }
         }
-     
     }
     vector<int> bfs(vector<vector<int>> &adj) {
         // code here
-        int n= adj.size();
-        vector<bool> visited(n,false);
-        vector<int> v;
-       
-        for(int i =0;i<adj.size();i++){
-            if(visited[i] == false){
-                bfs(adj,visited,v,i);
+        int n = adj.size();
+        vector<int> ans;
+        vector<bool> vis(n,0);
+        for(int i =0;i<n;i++){
+            if(!vis[i]){
+                bfs(adj,ans,i,vis);
             }
         }
-        return v;
+        return ans;
     }
 };
