@@ -4,29 +4,26 @@ class Solution {
         vis[node] = true;
         queue<pair<int,int>> q;
         q.push({node,-1});
-        bool ans = false;
         
         while(!q.empty()){
-            int frontnode = q.front().first;
+            int frontNode = q.front().first;
             int parent = q.front().second;
             q.pop();
-            for(auto neigh : adj[frontnode]){
+            for(auto neigh : adj[frontNode]){
                 if(!vis[neigh]){
+                    q.push({neigh,frontNode});
                     vis[neigh] = true;
-                    q.push({neigh,frontnode});
-                }else if(neigh!= parent){
-                    return true;
+                }else{
+                    if(neigh != parent ){
+                        return true;
+                    }
                 }
             }
         }
-     
-        return ans;
+        return false;
     }
-   
     bool isCycle(int V, vector<vector<int>>& edges) {
-        // Code here
-        // how will you do it using bfs.
-        // simply making an visited array and then checking if a repeated node occured or not.
+       
         vector<bool> vis(V,false);
         vector<vector<int>> adj(V);
         for(int i =0;i<edges.size();i++){
@@ -35,15 +32,15 @@ class Solution {
             adj[u].push_back(v);
             adj[v].push_back(u);
         }
-        bool ans = false;
-     
+        
         for(int i =0;i<V;i++){
-            if(vis[i] == false){
-                bool temp = bfs(adj,vis,i);
-                if(temp==true)ans=true;
+            if(!vis[i]){
+                if(bfs(adj,vis,i)){
+                    return true;
+                }
             }
         }
-        return ans;
         
+        return false;
     }
 };
