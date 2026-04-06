@@ -1,44 +1,39 @@
 class Solution {
   public:
-  
-    bool dfs(vector<vector<int>> &adj,vector<bool> & vis,vector<bool> & pathVis,int node){
-        vis[node] = true;
-        
-        for(auto j : adj[node]){
-            if(!vis[j]){
-                pathVis[node]= true;
-                if(dfs(adj,vis,pathVis,j)) return true;
-                pathVis[node] = false;
-            }else{
-                if(pathVis[j]){
-                    return true;
-                }
-            }
-            
-        }
-        return false;
-    }
-    
     bool isCyclic(int V, vector<vector<int>> &edges) {
         // code here
         vector<vector<int>> adj(V);
+        vector<int> ind(V,0);
+        
         for(int i =0;i<edges.size();i++){
             int u = edges[i][0];
             int v = edges[i][1];
             adj[u].push_back(v);
+            ind[v]++;
         }
         
-        vector<bool> vis(V,false);
-        vector<bool> pathVis(V,false);
-        
+        queue<int> q;
         for(int i =0;i<V;i++){
-            if(!vis[i]){
-                if(dfs(adj,vis,pathVis,i)){
-                    return true;
-                }
+            if(ind[i] == 0){
+                q.push(i);
             }
         }
+        vector<int> val;
+        while(!q.empty()){
+            int frontNode = q.front();
+            q.pop();
+            val.push_back(frontNode);
+            for(auto u : adj[frontNode]){
+                ind[u]--;
+                if(ind[u] == 0){
+                    q.push(u);
+                }
+            }
+            
+        }
+   
         
-        return false;
+        return val.size() != V;
+   
     }
 };
