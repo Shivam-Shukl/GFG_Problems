@@ -1,38 +1,49 @@
 class Solution {
-  public:
-  
-    void dfs(vector<vector<int>> &adj,stack<int> &st,vector<bool> &vis, int node){
-        vis[node] = true;
-        
-        for(auto j : adj[node]){
-            if(!vis[j]){
-                dfs(adj,st,vis,j);
-            }
-        }
-        st.push(node);
-    }
-    
+public:
     vector<int> topoSort(int V, vector<vector<int>>& edges) {
-        // code here
+        
         vector<vector<int>> adj(V);
-        for(int i = 0;i<edges.size();i++){
-            int u = edges[i][0];
-            int v = edges[i][1];
+        vector<int> ind(V, 0);
+
+        // Build graph
+        for(auto &e : edges){
+            int u = e[0];
+            int v = e[1];
             adj[u].push_back(v);
+            ind[v]++;
         }
-        vector<bool> vis(V,false);
-        stack<int> st;
-        for(int i =0;i<V;i++){
-            if(!vis[i]){
-                dfs(adj,st,vis,i);
+
+        queue<int> q;
+
+        // Push nodes with indegree 0
+        for(int i = 0; i < V; i++){
+            if(ind[i] == 0){
+                q.push(i);
             }
         }
+
         vector<int> ans;
-        while(!st.empty()){
-            int top = st.top();
-            ans.push_back(top);
-            st.pop();
+
+        // BFS (Kahn's Algorithm)
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+
+            ans.push_back(node);
+
+            for(auto neigh : adj[node]){
+                ind[neigh]--;
+                if(ind[neigh] == 0){
+                    q.push(neigh);
+                }
+            }
         }
+
+        // Cycle check
+        if(ans.size() != V){
+            return {}; // cycle exists
+        }
+
         return ans;
     }
 };
