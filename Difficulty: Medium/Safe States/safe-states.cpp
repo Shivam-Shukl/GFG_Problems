@@ -1,65 +1,36 @@
-
-
 class Solution {
-public:
-
-    bool dfs(vector<vector<int>> &graph,vector<bool> &vis,vector<bool> &pathVis, vector<bool> &safe,int node){
-        vis[node] = true;
-        pathVis[node] = true;
-
-        // point wali baat yeh hai ki agar terminal node ho toh true mark kar do 
-        // aur latuate wakt check karo agar koi nahi mila toh true mark kar do 
-        // iske liye bool function banana padega 
-
-        bool cond = true;
-
-        for(auto j : graph[node]){
-
-            if(!vis[j]){
-                if(!dfs(graph,vis,pathVis,safe,j)){
-                    cond = false;
-                }
-            }else{
-                if(pathVis[j]){
-                    // cycle wali condtion 
-                    cond = false;
-                    break;
-                }else if(!safe[j]){
-                    cond = false;
-                }
-            }
-        }
-
-        if(cond) safe[node] = true;
-        
-        pathVis[node] = false;
-        if (cond) return true;
-        else return false;
-
-    }
-    vector<int> safeNodes(int V, vector<vector<int>>& edges){
-        vector<vector<int>> graph(V);
+  public:
+    vector<int> safeNodes(int V, vector<vector<int>>& edges) {
+        // Code here
+        vector<vector<int>> adjRev(V);
+        vector<int> ind(V,0);
         for(int i =0;i<edges.size();i++){
             int u = edges[i][0];
             int v = edges[i][1];
-            graph[u].push_back(v);
+            adjRev[v].push_back(u);
+            ind[u]++;
         }
-        int n = graph.size();
-        vector<bool> vis(n,false);
-        vector<bool> pathVis(n,false);
-        vector<bool> safe(n,false);
-
-        for(int i = 0;i<n;i++){
-            if(!vis[i]){
-                bool a = dfs(graph,vis,pathVis,safe,i);
+        queue<int> q;
+        for(int i =0;i<V;i++){
+            if(ind[i] == 0){
+                q.push(i);
             }
         }
-        vector<int> ans;
-        for(int i = 0;i<n;i++){
-            if(safe[i]){
-                ans.push_back(i);
+        
+        vector<int> val;
+        
+        while(!q.empty()){
+            int frontNode = q.front();
+            q.pop();
+            val.push_back(frontNode);
+            for(auto i : adjRev[frontNode]){
+                ind[i]--;
+                if(ind[i] == 0){
+                    q.push(i);
+                }
             }
         }
-        return ans;
+        return val;
+        
     }
 };
